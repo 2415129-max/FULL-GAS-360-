@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-slate-50">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FullGas SmartCheck | Historial Clínico Digital y Revisión Preventiva</title>
+
+  <!-- Google Fonts: Inter & Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fullgas: {
+              red: '#E5242A',
+              redDark: '#C1181D',
+              redLight: '#FEE2E2',
+              slate: '#1E293B',
+              dark: '#0F172A',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            montserrat: ['Montserrat', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="h-full flex flex-col bg-slate-50 text-slate-900 selection:bg-red-500 selection:text-white">
+
+  <!-- Toast Notifications Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 pointer-events-none"></div>
+
+  <!-- Global Modal Container -->
+  <div id="modal-container" class="hidden"></div>
+
+  <!-- Main Application Header -->
+  <header class="sticky top-0 z-40 bg-slate-900/95 backdrop-blur-md border-b border-slate-800 text-white shadow-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 md:h-20">
+        
+        <!-- Brand & Logo -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="FullGasApp.navigate('inicio')">
+          <div class="w-10 h-10 md:w-12 md:h-12 rounded-2xl bg-gradient-to-tr from-red-700 to-red-500 flex items-center justify-center text-white font-black text-xl font-montserrat shadow-lg shadow-red-600/30">
+            FG
+          </div>
+          <div>
+            <div class="flex items-center space-x-1.5">
+              <span class="font-montserrat font-black text-lg md:text-xl tracking-tight text-white">FullGas</span>
+              <span class="font-montserrat font-extrabold text-lg md:text-xl text-red-500">SmartCheck</span>
+            </div>
+            <div class="text-[10px] text-slate-400 font-semibold tracking-wider uppercase -mt-0.5">
+              Por FullGasNino • Taller Inteligente
+            </div>
+          </div>
+        </div>
+
+        <!-- Desktop Navigation Bar -->
+        <nav class="hidden lg:flex items-center space-x-1">
+          <button class="nav-btn px-3 py-2 rounded-xl text-xs font-bold transition-all" data-view="inicio">
+            🏠 Inicio
+          </button>
+          <button class="nav-btn px-3 py-2 rounded-xl text-xs font-bold transition-all" data-view="nuevo-check">
+            📋 Nuevo SmartCheck
+          </button>
+          <button class="nav-btn px-3 py-2 rounded-xl text-xs font-bold transition-all" data-view="resultado">
+            📑 Reporte Activo
+          </button>
+          <button class="nav-btn px-3 py-2 rounded-xl text-xs font-bold transition-all" data-view="pasaporte">
+            🪪 Pasaporte Digital
+          </button>
+          <button class="nav-btn px-3 py-2 rounded-xl text-xs font-bold transition-all" data-view="historial">
+            ⏱️ Historial
+          </button>
+          <button class="nav-btn px-3 py-2 rounded-xl text-xs font-bold transition-all" data-view="metricas">
+            📊 Validación MVP
+          </button>
+        </nav>
+
+        <!-- Right Side: Role Toggle (Técnico / Cliente) & Mobile Button -->
+        <div class="flex items-center space-x-3">
+          <!-- Toggle Modo Técnico / Modo Cliente -->
+          <button id="role-mode-toggle" class="px-3 py-1.5 text-xs font-semibold rounded-full bg-slate-800 text-slate-300 border border-slate-700 transition-all flex items-center" title="Alternar entre visión de Taller y visión amigable para el Cliente">
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-red-400 mr-1.5"></span>
+            Modo Técnico / Taller
+          </button>
+
+          <!-- Mobile Hamburger Toggle -->
+          <button id="mobile-menu-toggle" class="lg:hidden p-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white hover:bg-slate-700 focus:outline-none">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Mobile Dropdown Navigation -->
+    <div id="mobile-nav" class="hidden lg:hidden border-t border-slate-800 bg-slate-900/98 px-4 pt-2 pb-4 space-y-1">
+      <button class="mobile-nav-btn w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2" data-view="inicio">
+        <span>🏠</span><span>Inicio (Dashboard)</span>
+      </button>
+      <button class="mobile-nav-btn w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2" data-view="nuevo-check">
+        <span>📋</span><span>Nuevo SmartCheck</span>
+      </button>
+      <button class="mobile-nav-btn w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2" data-view="resultado">
+        <span>📑</span><span>Reporte Activo</span>
+      </button>
+      <button class="mobile-nav-btn w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2" data-view="pasaporte">
+        <span>🪪</span><span>Pasaporte Digital del Auto</span>
+      </button>
+      <button class="mobile-nav-btn w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2" data-view="historial">
+        <span>⏱️</span><span>Historial de Revisiones</span>
+      </button>
+      <button class="mobile-nav-btn w-full text-left px-3 py-2.5 rounded-xl text-sm font-bold text-slate-300 hover:bg-slate-800 hover:text-white flex items-center space-x-2" data-view="metricas">
+        <span>📊</span><span>Validación del MVP & Métricas</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main View Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8" id="main-content">
+    <!-- El contenido de la vista activa se renderiza aquí dinámicamente -->
+    <div class="p-12 text-center text-slate-400">
+      <div class="inline-block animate-spin rounded-full h-8 w-8 border-4 border-red-600 border-t-transparent mb-3"></div>
+      <p class="text-sm font-semibold">Cargando FullGas SmartCheck...</p>
+    </div>
+  </main>
+
+  <!-- Professional Footer -->
+  <footer class="no-print bg-slate-900 border-t border-slate-800 text-slate-400 text-xs py-8 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center space-x-3">
+        <span class="w-7 h-7 rounded-lg bg-red-600 text-white font-black text-sm flex items-center justify-center font-montserrat">FG</span>
+        <div>
+          <span class="font-bold text-white text-sm">FullGas SmartCheck</span>
+          <p class="text-[11px] text-slate-500">Historial Clínico Digital y Revisión Preventiva Automotriz • FullGasNino</p>
+        </div>
+      </div>
+
+      <div class="flex items-center space-x-6 text-[11px]">
+        <span class="text-slate-500">🟢 Buen Estado</span>
+        <span class="text-slate-500">🟡 Revisión Próxima</span>
+        <span class="text-slate-500">🔴 Requiere Atención</span>
+      </div>
+
+      <div class="text-[11px] text-slate-500">
+        &copy; 2024 FullGasNino. Herramienta de Validación MVP.
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script src="app.js"></script>
+</body>
+</html>

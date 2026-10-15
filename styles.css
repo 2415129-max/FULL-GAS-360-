@@ -1,0 +1,161 @@
+/* FullGas SmartCheck - Custom Automotive Styling */
+
+:root {
+  --fullgas-red: #E5242A;
+  --fullgas-red-dark: #C1181D;
+  --fullgas-red-light: #FEE2E2;
+  --fullgas-dark: #0F172A;
+  --fullgas-slate: #1E293B;
+  --fullgas-gray: #64748B;
+  --fullgas-light: #F8FAFC;
+  --status-green: #16A34A;
+  --status-green-bg: #DCFCE7;
+  --status-yellow: #D97706;
+  --status-yellow-bg: #FEF3C7;
+  --status-red: #DC2626;
+  --status-red-bg: #FEE2E2;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: #F8FAFC;
+  color: #0F172A;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Placa vehicular estilo oficial */
+.license-plate {
+  display: inline-flex;
+  align-items: center;
+  background: #FFFFFF;
+  border: 3px solid #0F172A;
+  border-radius: 8px;
+  padding: 3px 12px;
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #0F172A;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.12);
+  position: relative;
+}
+
+.license-plate::before {
+  content: 'PERÚ';
+  position: absolute;
+  top: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #E5242A;
+  color: white;
+  font-size: 8px;
+  font-weight: 900;
+  padding: 1px 6px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+}
+
+/* Carbon fiber subtle pattern for passport / cards */
+.carbon-card {
+  background-color: #0F172A;
+  background-image: radial-gradient(#1E293B 15%, transparent 16%), radial-gradient(#1E293B 15%, transparent 16%);
+  background-size: 16px 16px;
+  background-position: 0 0, 8px 8px;
+}
+
+/* Gauge Score Circle */
+.gauge-container {
+  position: relative;
+  width: 170px;
+  height: 170px;
+  margin: 0 auto;
+}
+
+.gauge-svg {
+  transform: rotate(-90deg);
+}
+
+.gauge-bg {
+  fill: none;
+  stroke: #E2E8F0;
+  stroke-width: 12;
+}
+
+.gauge-fill {
+  fill: none;
+  stroke-width: 12;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s ease-in-out, stroke 0.5s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: #F1F5F9;
+}
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Pulse animation for critical alerts */
+@keyframes alertPulse {
+  0% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(220, 38, 38, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+
+.pulse-critical {
+  animation: alertPulse 2s infinite;
+}
+
+/* Print Styles for professional physical / PDF export */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+  }
+  
+  header, 
+  nav, 
+  #view-selector, 
+  .no-print, 
+  button, 
+  .toast,
+  #modal-container {
+    display: none !important;
+  }
+  
+  #main-content {
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .print-page {
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    page-break-after: avoid;
+  }
+
+  .print-header {
+    display: flex !important;
+    border-bottom: 2px solid #E5242A !important;
+    padding-bottom: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .card-print {
+    border: 1px solid #CBD5E1 !important;
+    break-inside: avoid;
+  }
+}
